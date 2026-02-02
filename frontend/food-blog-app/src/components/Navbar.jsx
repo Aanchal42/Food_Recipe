@@ -11,7 +11,7 @@ const Navbar = () => {
 
   useEffect(()=>{
      setIsLogin(token ? false : true)
-  }, {token})
+  }, [token])
 
   const checkLogin=()=>{
     if(token){
