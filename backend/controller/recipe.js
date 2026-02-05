@@ -23,21 +23,32 @@ const getRecipe=async(req,res)=>{
     res.json(recipe)
 }
 
-const addRecipe=async(req,res)=>{
-    console.log(req.user)
-    const {title,ingredients,instructions,time}=req.body 
+const addRecipe = async (req, res) => {
+  try {
+    const { title, time, instructions } = req.body;
+    const ingredients = JSON.parse(req.body.ingredients);
 
-    if(!title || !ingredients || !instructions)
-    {
-        res.json({message:"Required fields can't be empty"})
+    if (!title || !ingredients || !instructions) {
+      return res.status(400).json({
+        message: "Required fields can't be empty",
+      });
     }
 
-    const newRecipe=await Recipes.create({
-        title,ingredients,instructions,time,coverImage:req.file.filename,
-        createdBy:req.user.id
-    })
-   return res.json(newRecipe)
-}
+    const newRecipe = await Recipes.create({
+      title,
+      time,
+      ingredients,
+      instructions,
+      coverImage: req.file ? req.file.filename : null,
+      createdBy: req.user.id,
+    });
+
+    return res.status(201).json(newRecipe);
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
+  }
+};
+
 
 const editRecipe=async(req,res)=>{
     const {title,ingredients,instructions,time}=req.body 

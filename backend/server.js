@@ -1,23 +1,27 @@
 const express = require("express");
-const app = express();
-const dotenv = require("dotenv").config()
-const connectDb = require('./config/connectionDb')
+const dotenv = require("dotenv");
 const cors = require("cors");
+const connectDb = require("./config/connectionDb");
 
-const PORT = process.env.PORT || 3000
+dotenv.config();
 
-connectDb()
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-app.use(express.json())
+connectDb();
+
 app.use(cors({
-  origin: "*"
-}))
-app.use(express.static("public"))
+  origin: "*", // later restrict to frontend URL
+}));
 
-app.use("/", require("./routes/user"))
-app.use("/recipe" , require("./routes/recipe"))
+app.use(express.json());
 
-app.listen(PORT,(err) => {
-     console.log(`app is listening on port ${PORT}`);
-     
-}) 
+// serve uploaded images
+app.use("/images", express.static("public/images"));
+
+app.use("/", require("./routes/user"));
+app.use("/recipe", require("./routes/recipe"));
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
