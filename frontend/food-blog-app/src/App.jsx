@@ -8,7 +8,10 @@ import AddFoodRecipe from './pages/AddFoodRecipe'
 import EditRecipe from './pages/EditRecipe'
 import RecipeDetails from './pages/RecipeDetails'
 
-const API = import.meta.env.VITE_API_URL   // ✅ ADD THIS
+// const API = import.meta.env.VITE_API_URL   // ✅ ADD THIS
+const API = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
 
 const getAllRecipes = async () => {
   const res = await axios.get(`${API}/recipe`)
